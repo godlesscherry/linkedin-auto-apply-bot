@@ -29,39 +29,44 @@ const logApplication = (jobUrl) => {
 
 // Apply to a single job
 const applyToJob = async (driver, jobUrl) => {
-  try {
-    console.log(`Processing job alert URL: ${jobUrl}`);
-    await driver.get(jobUrl);
-
-    // Wait for job listings to load
-    await driver.wait(until.elementLocated(By.css(".jobs-search-results__list-item")), 30000);
-
-    // Locate and click the first job listing
-    const jobListing = await driver.findElement(By.css(".jobs-search-results__list-item a"));
-    const jobUrlDetails = await jobListing.getAttribute("href");
-    await driver.get(jobUrlDetails);
-
-    // Wait for job details to load
-    await driver.wait(until.elementLocated(By.css(".jobs-apply-button--top-card")), 30000);
-
-    // Locate and click the "Easy Apply" button
-    const easyApplyButton = await driver.wait(
-      until.elementLocated(By.css(".jobs-apply-button--top-card")),
-      10000
-    );
-    await driver.wait(until.elementIsVisible(easyApplyButton), 10000);
-    await easyApplyButton.click();
-
-    // Add your job application logic here (e.g., filling out forms, submitting application)
-    console.log(`Easy Apply clicked for: ${jobUrlDetails}`);
-
-    // Log the application
-    logApplication(jobUrlDetails);
-  } catch (error) {
-    console.error(`Error applying to job: ${jobUrl}`, error);
-  }
-};
-
+    try {
+      console.log(`Processing job alert URL: ${jobUrl}`);
+      await driver.get(jobUrl);
+  
+      // Wait for job listings to load
+      await driver.wait(until.elementLocated(By.css(".job-card-container--clickable")), 30000);
+      console.log("Job listings loaded");
+  
+      // Locate and click the first job listing
+      const jobListing = await driver.findElement(By.css(".job-card-container--clickable a"));
+      const jobUrlDetails = await jobListing.getAttribute("href");
+      console.log(`First job listing URL: ${jobUrlDetails}`);
+      await driver.get(jobUrlDetails);
+  
+      // Wait for job details to load
+      await driver.wait(until.elementLocated(By.css(".jobs-apply-button--top-card")), 30000);
+      console.log("Job details loaded");
+  
+      // Locate and click the "Easy Apply" button
+      const easyApplyButton = await driver.wait(
+        until.elementLocated(By.css(".jobs-apply-button--top-card .jobs-apply-button.artdeco-button--primary")),
+        10000
+      );
+      console.log("Easy Apply button located");
+      await driver.wait(until.elementIsVisible(easyApplyButton), 10000);
+      console.log("Easy Apply button is visible");
+      await easyApplyButton.click();
+      console.log("Easy Apply button clicked");
+  
+      // Add your job application logic here (e.g., filling out forms, submitting application)
+      console.log(`Easy Apply clicked for: ${jobUrlDetails}`);
+  
+      // Log the application
+      logApplication(jobUrlDetails);
+    } catch (error) {
+      console.error(`Error applying to job: ${jobUrl}`, error);
+    }
+  };
 const main = async () => {
   const driver = await new Builder().forBrowser("chrome").build();
 
