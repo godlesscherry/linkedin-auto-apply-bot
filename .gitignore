@@ -38,3 +38,5 @@ coverage/
 .idea/
 .DS_Store
 *.swp
+# Application logs
+job_logs.json
